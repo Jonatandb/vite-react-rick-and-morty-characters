@@ -3,6 +3,7 @@ import Character from './Character'
 
 export default function CharacterList() {
   const [characters, setCharacters] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let mounted = true
@@ -17,6 +18,8 @@ export default function CharacterList() {
         }
       } catch (error) {
         console.log(error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchData()
@@ -24,7 +27,19 @@ export default function CharacterList() {
     return () => (mounted = false)
   }, [])
 
-  return characters.map(character => (
-    <Character key={character.id} character={character} />
-  ))
+  return (
+    <div className='container'>
+      <div className='row'>
+        {loading ? (
+          <h1>Loading...</h1>
+        ) : (
+          characters.map(character => (
+            <div className='col-md-4' key={character.id}>
+              <Character character={character} />
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  )
 }
